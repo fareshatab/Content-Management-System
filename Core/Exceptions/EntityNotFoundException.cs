@@ -1,0 +1,11 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Core.Exceptions
+{
+    public class EntityNotFoundException : Exception
+    {
+        public EntityNotFoundException():base("Item Not Found") { }
+    }
+}
