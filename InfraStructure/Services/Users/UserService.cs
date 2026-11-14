@@ -150,8 +150,12 @@ namespace InfraStructure.Services.Users
             await _db.SaveChangesAsync();
             return user.Id;
         }
-      
 
+        public async Task<List<UserViewModel>> GetAuthorList()
+        {
+            var users = await _db.Users.Where(x => !x.IsDelete && x.UserType == Core.Enums.TypeUser.ArticleAuther).ToListAsync();
+            return _mapper.Map<List<UserViewModel>>(users);
+        }
 
     }
 }

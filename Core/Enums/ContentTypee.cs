@@ -6,6 +6,7 @@ namespace Core.Enums
 {
     public enum ContentTypee
     {
-        batekha = 1
+        Post = 1 ,
+        Track = 2
     }
 }
