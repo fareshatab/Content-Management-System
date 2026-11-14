@@ -61,7 +61,7 @@ $(document).on("click", ".PopUp", function () {
 });
 
 $(document).on("click", ".Confirm", function () {
-    debugger;
+   
     $("#Confirm").modal("show");
     $("#Confirm .btn-danger").attr("href", $(this).attr("href"));
     $("#Confirm .btn-danger").attr("tname", $(this).attr("tname"));

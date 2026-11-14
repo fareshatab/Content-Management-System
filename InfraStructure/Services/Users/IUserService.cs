@@ -1,5 +1,6 @@
 ﻿using CMS.Core.Dtos;
 using Core.DTOs;
+using Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,6 @@ namespace InfraStructure.Services.Users
         Task<String> Delete(System.String Id);
         Task<UpdateUserDto> GitById(string Id);
         Task<String> Update(UpdateUserDto dto);
+        Task<List<UserViewModel>> GetAuthorList();
     }
 }

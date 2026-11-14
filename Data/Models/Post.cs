@@ -10,13 +10,18 @@ namespace Data.Models
         public int Id { get; set; }
         public String Title { get; set; }
         public String Body { get; set; }
-        public int TimeInMintes { get; set; }
-        public String AutherID {  get; set; }
-        public User Auther { get; set; }
+        public int TimeInMinute { get; set; }
+        public String AuthorId {  get; set; }
+        public User Author { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         public List<Attachment> Attachments { get; set; }
         public ContentStatus Status { get; set; }
+
+        public Post()
+        {
+            Status = ContentStatus.pending;
+        }
 
     }
 }

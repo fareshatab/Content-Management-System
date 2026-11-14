@@ -230,7 +230,7 @@ namespace Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AutherID")
+                    b.Property<string>("AuthorId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -253,7 +253,7 @@ namespace Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("TimeInMintes")
+                    b.Property<int>("TimeInMinute")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -268,7 +268,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AutherID");
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("CategoryId");
 
@@ -306,14 +306,14 @@ namespace Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("TimeInMintes")
+                    b.Property<int>("TimeInMinute")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TrackURl")
+                    b.Property<string>("TrackUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -590,9 +590,9 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Models.Post", b =>
                 {
-                    b.HasOne("Data.Models.User", "Auther")
+                    b.HasOne("Data.Models.User", "Author")
                         .WithMany("Posts")
-                        .HasForeignKey("AutherID")
+                        .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -602,7 +602,7 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Auther");
+                    b.Navigation("Author");
 
                     b.Navigation("Category");
                 });

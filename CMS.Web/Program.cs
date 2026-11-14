@@ -4,8 +4,11 @@ using CMS.Infrastructure.Middlewares;
 using CMS.Infrastructure.Services;
 using CMS.Infrastructure.Services.Categories;
 using Data.Models;
+using Infrastructure.Services.Tracks;
 using InfraStructure.Mapping;
+using InfraStructure.Services;
 using InfraStructure.Services.Advertisement;
+using InfraStructure.Services.Posts;
 using InfraStructure.Services.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +29,9 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IAdvertisementService, AdvertisementService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<ITrackService, TrackService>();
+builder.Services.AddTransient<IPostService, PostService>();
+builder.Services.AddTransient<IDashboardService, DashboardService>();
 builder.Services.AddAutoMapper(cfg => { }, typeof(MapperProfile).Assembly);
 
 
