@@ -9,14 +9,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CMS.Web.Controllers
 {
-    public class PostController : Controller
+    public class PostController : BaseController
     {
 
         private readonly IPostService _postService;
         private readonly ICategoryService _categoryService;
         private readonly IUserService _userService;
 
-        public PostController(IUserService userService, IPostService postService, ICategoryService categoryService)
+        public PostController( IPostService postService, ICategoryService categoryService, IUserService userService) : base(userService)
         {
             _postService = postService;
             _categoryService = categoryService;

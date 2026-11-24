@@ -15,5 +15,8 @@ namespace InfraStructure.Services.Users
         Task<UpdateUserDto> GitById(string Id);
         Task<String> Update(UpdateUserDto dto);
         Task<List<UserViewModel>> GetAuthorList();
+        UserViewModel GetUserByUsername(string username);
+        Task<string> SetFCMToUser(string userId, string fcmToken);
+        Task<byte[]> ExportToExcel();
     }
 }

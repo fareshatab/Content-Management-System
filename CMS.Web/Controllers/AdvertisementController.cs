@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CMS.Web.Controllers
 {
-    public class AdvertisementController : Controller
+    public class AdvertisementController : BaseController
     {
         private readonly IAdvertisementService _advertisementService;
 
-        public AdvertisementController(IAdvertisementService advertisementService, IUserService userService)
+        public AdvertisementController(IAdvertisementService advertisementService, IUserService userService) : base(userService)
         {
             _advertisementService = advertisementService;
         }

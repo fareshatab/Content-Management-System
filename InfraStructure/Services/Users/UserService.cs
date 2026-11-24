@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CMS.Core.Dtos;
 using CMS.Data.EntityFrameworkCore;
+using CMS.Infrastructure.Helpers;
 using CMS.Infrastructure.Services;
 using Core.Constants;
 using Core.DTOs;
@@ -156,6 +157,46 @@ namespace InfraStructure.Services.Users
             var users = await _db.Users.Where(x => !x.IsDelete && x.UserType == Core.Enums.TypeUser.ArticleAuther).ToListAsync();
             return _mapper.Map<List<UserViewModel>>(users);
         }
+        public UserViewModel GetUserByUsername(string username)
+        {
+            var user = _db.Users.SingleOrDefault(x => x.UserName == username && !x.IsDelete);
+            if (user == null)
+            {
+                throw new EntityNotFoundException();
+            }
+            return _mapper.Map<UserViewModel>(user);
+        }
+        public async Task<string> SetFCMToUser(string userId, string fcmToken)
+        {
+            var user = _db.Users.SingleOrDefault(x => x.Id == userId && !x.IsDelete);
+            if (user == null)
+            {
+                throw new EntityNotFoundException();
+            }
+            user.FCMToken = fcmToken;
+            _db.Users.Update(user);
+            await _db.SaveChangesAsync();
+            return user.Id;
+        }
 
+        public async Task<byte[]> ExportToExcel()
+        {
+            var users = await _db.Users.Where(x => !x.IsDelete).ToListAsync();
+
+            return ExcelHelpers.ToExcel(new Dictionary<string, ExcelColumn>
+            {
+                {"FullName", new ExcelColumn("FullName", 0)},
+                {"Email", new ExcelColumn("Email", 1)},
+                {"Phone", new ExcelColumn("Phone", 2)}
+            }, new List<ExcelRow>(users.Select(e => new ExcelRow
+            {
+                Values = new Dictionary<string, string>
+                {
+                    {"FullName", e.FullName},
+                    {"Email", e.Email},
+                    {"Phone", e.PhoneNumber }
+                }
+            })));
+        }
     }
 }

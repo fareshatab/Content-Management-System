@@ -289,45 +289,78 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-messaging-compat.js"></script>
-    <script>
-        (function () {
+   <script>
+(function () {
+    firebase.initializeApp({
+        apiKey: "AIzaSyBwLaDK90phbo2aGduEjZBLMJeBnAiL_4I",
+        authDomain: "cmsweb-23be2.firebaseapp.com",
+        projectId: "cmsweb-23be2",
+        storageBucket: "cmsweb-23be2.firebasestorage.app",
+        messagingSenderId: "862315757768",
+        appId: "1:862315757768:web:845d4c7cc16a97116ea5fd",
+        measurementId: "G-7R5YZLRRT8"
+    });
+
+    if (!firebase.messaging.isSupported()) {
+        console.warn("FCM not supported in this browser");
+        return;
+    }
+
+    const messaging = firebase.messaging();
+        const VAPID_KEY = "BGYU_2G1EKxCH9g_oNpXwc-cC49hq6CRfP8f7uZESqbiLxG7OS_dpB6SKJrGS8yKJ-t-As00XPaaiT26TtbaEmE";
+
+    window.enableNotifications = async function () {
         try {
-        firebase.initializeApp({
-        apiKey: "AIzaSyCmCWruVV7F0y1cCwE_s93fXVJIcwRBnQ4",
-        authDomain: "cmsweb-b1aa8.firebaseapp.com",
-        projectId: "cmsweb-b1aa8",
-        storageBucket: "cmsweb-b1aa8.appspot.com",
-        messagingSenderId: "1020282346736",
-        appId: "1:1020282346736:web:d42de194e7442f9c91f635",
-        measurementId: "G-H7R0REYVQR"
-        });
+            console.log("Current permission:", Notification.permission);
 
-        if (!firebase.messaging.isSupported()) { return; }
-        const messaging = firebase.messaging();
+            const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+            await navigator.serviceWorker.ready;
 
-        Notification.requestPermission().then(function (permission) {
-        if (permission !== "granted") { return null; }
-        return messaging.getToken();
-        }).then(function (token) {
-        if (!token) { return; }
-        $.ajax({
-        url: "/User/AddFCM?fcm=" + encodeURIComponent(token),
-        type: 'GET',
-        dataType: 'json',
-        success: function (res) { console.log(res); }
-        });
-        }).catch(function (err) {
-        console.warn("FCM error:", err);
-        });
+            const permission = await Notification.requestPermission();
+            console.log("Permission result:", permission);
+            if (permission !== "granted") return;
 
-        messaging.onMessage(function (payload) {
-        console.log("Message received:", payload);
-        });
-        } catch (e) {
-        console.warn("Firebase init failed:", e);
+            const token = await messaging.getToken({
+                vapidKey: VAPID_KEY,
+                serviceWorkerRegistration: registration
+            });
+            console.log("FCM token:", token);
+
+            if (token) {
+                $.get("/User/AddFCM", { fcm: token }, function (res) { console.log(res); });
+            }
+        } catch (err) {
+            console.error("FCM error:", err);
         }
-        })();
-    </script>
+    };
+
+    messaging.onMessage(function (payload) {
+    console.log("Message received:", payload);
+
+    const d = payload.data || {};
+    const n = payload.notification || {};
+    const title = n.title || d.title || d.Title || 'إشعار جديد';
+    const body  = n.body  || d.body  || d.Body  || '';
+
+    if (Notification.permission !== "granted") {
+        console.warn("Permission not granted");
+        return;
+    }
+
+    navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js')
+        .then(function (reg) {
+            console.log("SW registration:", reg);
+            if (!reg) {
+                new Notification(title, { body: body });
+                return;
+            }
+            return reg.showNotification(title, { body: body, icon: '/favicon.ico' });
+        })
+        .then(function () { console.log("showNotification done"); })
+        .catch(function (e) { console.error("showNotification error:", e); });
+});
+})();
+</script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

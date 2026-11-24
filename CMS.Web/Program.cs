@@ -1,13 +1,17 @@
-using CMS.Data;
+
 using CMS.Data.EntityFrameworkCore;
 using CMS.Infrastructure.Middlewares;
 using CMS.Infrastructure.Services;
 using CMS.Infrastructure.Services.Categories;
+using Data;
 using Data.Models;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Infrastructure.Services.Tracks;
 using InfraStructure.Mapping;
 using InfraStructure.Services;
 using InfraStructure.Services.Advertisement;
+using InfraStructure.Services.Notifications;
 using InfraStructure.Services.Posts;
 using InfraStructure.Services.Users;
 using Microsoft.AspNetCore.Identity;
@@ -18,10 +22,14 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<CMSDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentity<Data.Models.User, Microsoft.AspNetCore.Identity.IdentityRole>()
-    .AddEntityFrameworkStores<CMSDbContext>();
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<CMSDbContext>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddTransient<IFileService, FileService>();
@@ -31,6 +39,7 @@ builder.Services.AddTransient<IAdvertisementService, AdvertisementService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ITrackService, TrackService>();
 builder.Services.AddTransient<IPostService, PostService>();
+builder.Services.AddTransient<INotificationService, NotificationService>();
 builder.Services.AddTransient<IDashboardService, DashboardService>();
 builder.Services.AddAutoMapper(cfg => { }, typeof(MapperProfile).Assembly);
 
@@ -56,6 +65,16 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+
+if (FirebaseApp.DefaultInstance == null)
+{
+    FirebaseApp.Create(new AppOptions
+    {
+        Credential = GoogleCredential.FromFile(
+            Path.Combine(app.Environment.ContentRootPath, "cmsweb-23be2-firebase-adminsdk-fbsvc-aeafee542f.json"))
+    });
+}
 
 app.MapControllerRoute(
     name: "default",
