@@ -7,6 +7,7 @@ using Core.Enums;
 using Core.Exceptions;
 using Core.ViewModels;
 using Data.Models;
+using InfraStructure.Services.Notifications;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,13 +20,15 @@ namespace InfraStructure.Services.Posts
         private readonly CMSDbContext _db;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
+        private readonly INotificationService _notificationService;
         private readonly IFileService _fileService;
-        public PostService( IEmailService emailService, IFileService fileService, CMSDbContext db, IMapper mapper)
+        public PostService( IEmailService emailService, IFileService fileService, CMSDbContext db, IMapper mapper, INotificationService notificationService)
         {
             _db = db;
             _mapper = mapper;
             _emailService = emailService;
             _fileService = fileService;
+            _notificationService = notificationService;
         }
 
         public async Task<ResponseDto> GetAll(Pagination pagination, Query query)
@@ -164,8 +167,17 @@ namespace InfraStructure.Services.Posts
             _db.Posts.Update(post);
             await _db.SaveChangesAsync();
 
-       
 
+            if (post.Author.FCMToken != null)
+            {
+                await _notificationService.SendByFCM(post.Author.FCMToken, new NotificationDto()
+                {
+                    Title = "Update Post",
+                    Body = "By Ahmed",
+                    Action = NotificationAction.General,
+                    ActionId = ""
+                });
+            }
 
             await _emailService.Send(post.Author.Email, "UPDATE POST STATUS !", $"YOUR POST NOW IS {status.ToString()}");
 

@@ -6,5 +6,6 @@ namespace Core.Enums
 {
     public enum NotificationAction
     {
+        General = 1
     }
 }

@@ -10,7 +10,7 @@ namespace Core.DTOs
     {
         public String FullName { get; set; }
         public DateTime? DateOfBirth { get; set; }
-        public int PhoneNumber { get; set; }
+        public String PhoneNumber { get; set; }
         public TypeUser UserType { get; set; }
         public IFormFile? Image { get; set; }
         public String Email {  get; set; }  

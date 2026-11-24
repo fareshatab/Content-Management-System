@@ -2,6 +2,7 @@
 using CMS.Core.Dtos;
 using CMS.Infrastructure.Services.Categories;
 using Core.DTOs;
+using InfraStructure.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace CMS.Web.Controllers
 {
-    public class CategoryController : Controller
+    public class CategoryController : BaseController
     {
 
         private readonly ICategoryService _categoryService;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IUserService userService) : base(userService)
         {
             _categoryService = categoryService;
         }

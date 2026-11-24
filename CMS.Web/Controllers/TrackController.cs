@@ -10,14 +10,14 @@ using Core.Constants;
 
 namespace CMS.Web.Controllers
 {
-    public class TrackController : Controller
+    public class TrackController : BaseController
     {
 
         private readonly ITrackService _trackService;
         private readonly ICategoryService _categoryService;
         private readonly IUserService _userService;
 
-        public TrackController(ITrackService trackService, ICategoryService categoryService, IUserService userService)
+        public TrackController(ITrackService trackService, ICategoryService categoryService, IUserService userService) : base(userService)
         {
             _trackService = trackService;
             _categoryService = categoryService;

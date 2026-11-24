@@ -1,14 +1,15 @@
 using InfraStructure.Services;
+using InfraStructure.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace CMS.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IDashboardService _dashboardService;
 
-        public HomeController(IDashboardService dashboardService)
+        public HomeController(IDashboardService dashboardService, IUserService userService) : base(userService)
         {
             _dashboardService = dashboardService;
         }
